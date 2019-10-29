@@ -2,7 +2,8 @@ version: '3'
 services:
   postgres:
     container_name: postgres
-    image: parrotstream/postgres:10.5
+    hostname: postgres
+    image: postgres:10.5
     ports:
     - 5432:5432
     environment:
@@ -10,10 +11,11 @@ services:
     privileged: true
   hive:
     container_name: hive
+    hostname: hive
     build:
       context: .
       dockerfile: Dockerfile
-    image: parrotstream/hive:latest
+    image: hive:3.1.2
     external_links:
     - hadoop
     - zookeeper
@@ -32,4 +34,4 @@ services:
 networks:
   default:
     external:
-      name: parrot_default
+      name: br1

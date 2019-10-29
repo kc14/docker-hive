@@ -2,7 +2,8 @@
 
 rm /opt/hive/logs/*.pid 2> /dev/null
 
-wait-for-it.sh zookeeper:2181 -t 120
+# wait-for-it.sh zookeeper:2181 -t 120
+wait-for-it.sh hadoop:2181 -t 120
 
 rc=$?
 if [ $rc -ne 0 ]; then
@@ -27,7 +28,7 @@ fi
 
 psql -h postgres -U postgres -c "CREATE DATABASE metastore;" 2>/dev/null
 
-$HIVE_HOME/bin/schematool -dbType postgres -initSchema
+"${HIVE_HOME}/bin/schematool" -dbType postgres -initSchema
 
 supervisorctl start hcat
 
@@ -47,7 +48,7 @@ wait-for-it.sh localhost:10000 -t 240
 rc=$?
 if [ $rc -ne 0 ]; then
     echo -e "\n---------------------------------------"
-    echo -e "   HiveServer2 not ready! Exiting..."
+    echo -e "   HiveServer2 on port 10000 not ready! Exiting..."
     echo -e "---------------------------------------"
     exit $rc
 fi
@@ -56,18 +57,19 @@ wait-for-it.sh localhost:10002 -t 240
 rc=$?
 if [ $rc -ne 0 ]; then
     echo -e "\n---------------------------------------"
-    echo -e "   HiveServer2 not ready! Exiting..."
+    echo -e "   HiveServer2 on port 10002 not ready! Exiting..."
     echo -e "---------------------------------------"
     exit $rc
 fi
 
 supervisorctl start webhcat
 
-wait-for-it.sh localhost:10002 -t 240
+# wait-for-it.sh localhost:10002 -t 240
+wait-for-it.sh localhost:50111 -t 240
 rc=$?
 if [ $rc -ne 0 ]; then
     echo -e "\n---------------------------------------"
-    echo -e "   WebHCat not ready! Exiting..."
+    echo -e "   WebHCat on port 50111 not ready! Exiting..."
     echo -e "---------------------------------------"
     exit $rc
 fi

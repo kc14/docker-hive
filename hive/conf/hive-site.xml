@@ -1,5 +1,4 @@
 <configuration>
-
   <property>
     <name>hive.server2.authentication</name>
     <value>NOSASL</value>
@@ -43,5 +42,9 @@
   <property>
     <name>hive.server2.webui.port</name>
     <value>10002</value>
+  </property>
+  <property>
+    <name>hive.zookeeper.quorum</name>
+    <value>zookeeper:2181</value>
   </property>
 </configuration>
