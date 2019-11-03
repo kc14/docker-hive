@@ -15,7 +15,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: hive:3.1.2
+    image: hive:4.0.0
     external_links:
     - hadoop
     - zookeeper

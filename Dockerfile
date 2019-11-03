@@ -5,7 +5,8 @@ LABEL maintainer="kc14 <kemmer.consulting+kc14@gmail.com>"
 
 USER root
 
-ENV HIVE_VER 3.1.2
+# ENV HIVE_VER 3.1.2
+ENV HIVE_VER 4.0.0-SNAPSHOT
 ENV TEZ_VER 0.9.1
 
 ENV HIVE_HOME /opt/hive
@@ -27,18 +28,24 @@ RUN yum clean all; \
     yum install -y postgresql; \
     yum clean all
 
-WORKDIR /opt/docker
+WORKDIR /Downloads
 
 # Apache Hive
-RUN wget "http://it.apache.contactlab.it/hive/hive-${HIVE_VER}/apache-hive-${HIVE_VER}-bin.tar.gz"
-RUN tar -xvf "apache-hive-${HIVE_VER}-bin.tar.gz" -C .. ; \
-    mv "../apache-hive-${HIVE_VER}-bin" "${HIVE_HOME}"
+# RUN wget "http://it.apache.contactlab.it/hive/hive-${HIVE_VER}/apache-hive-${HIVE_VER}-bin.tar.gz"
+COPY Downloads /Downloads
+
+# This statement creates the HIVE_HOME dir
+RUN tar -xvf "apache-hive-${HIVE_VER}-bin.tar.gz" ; \
+    mv "apache-hive-${HIVE_VER}-bin" "${HIVE_HOME}"
+
 RUN wget "https://jdbc.postgresql.org/download/postgresql-42.2.8.jar" -O "${HIVE_HOME}/lib/postgresql-42.2.8.jar"
+
 RUN wget "http://it.apache.contactlab.it/tez/0.9.1/apache-tez-0.9.1-bin.tar.gz" ; \
     tar -xvf "apache-tez-0.9.1-bin.tar.gz"
 RUN cp "apache-tez-0.9.1-bin"/tez*.jar "${HIVE_HOME}/lib/" ; \
     rm -rf "apache-tez-0.9.1-bin" ; \
     rm -f "apache-tez-0.9.1-bin.tar.gz"
+
 COPY hive/ "${HIVE_HOME}/"
 COPY ./etc /etc
 

@@ -1,0 +1,1 @@
+Download directory for vanilla apache hive binary distribution.
